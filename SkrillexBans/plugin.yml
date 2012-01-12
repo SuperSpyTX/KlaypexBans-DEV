@@ -1,0 +1,18 @@
+name: SkrillexBans
+main: why.dubstep.when.Main
+author: .SuPaH sPii
+version: 1.3
+commands:
+  sban:
+    description: Run several commands.
+    usage: /<command> <option> <player>
+permissions:
+  sban.exempt:
+    default: op
+    description: Exempt from SkrillexBans Death System.
+  sban.commands:
+    default: op
+    description: Can use the /sban features.
+  sban.iplog:
+    default: op
+    description: Bypass the IP logging checks.

@@ -15,4 +15,4 @@ It has:
 
 **I would recommend running this plugin along with RangeBans or other IP Banning plugin for best use of this feature
 
-*Not yet developed yet.
+*Not yet developed.

@@ -1,8 +1,5 @@
 package why.dubstep.when;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -94,40 +91,7 @@ public class Commands implements CommandExecutor {
 			mai.banned.clear();
 			mai.violators.clear();
 			
-			//load bans
-			final File blocks = new File(mai.getDataFolder().getAbsolutePath()
-					+ File.separator + "bannedplayers.txt");
-			if (blocks.exists()) {
-				mai.log.info("Loading previous bans...");
-				mai.loadBannedPlayers();
-				mai.log.info(mai.banned.size() + " bans loaded!");
-			} else {
-				try {
-					mai.log.info("No ban file! Creating.");
-					blocks.createNewFile();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			mai.ip.clear();
-			// load ip logs.
-			final File blocks1 = new File(mai.getDataFolder().getAbsolutePath()
-					+ File.separator + "ipdata.txt");
-			if (blocks1.exists()) {
-				mai.log.info("Loading IP data...");
-				mai.loadIPPlayers();
-				mai.log.info(mai.ip.size() + " players loaded!");
-			} else {
-				try {
-					mai.log.info("No IP file! Creating.");
-					blocks1.createNewFile();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			mai.loadConfiguration();
 
 			arg0.sendMessage("Reloaded configuration");
 			return true;

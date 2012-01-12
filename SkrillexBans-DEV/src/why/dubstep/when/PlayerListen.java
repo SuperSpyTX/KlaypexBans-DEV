@@ -52,6 +52,9 @@ public class PlayerListen extends PlayerListener {
 
 	@SuppressWarnings("rawtypes")
 	public void onPlayerJoin(PlayerJoinEvent event) {
+		if(!mai.parseBoolean(mai.getConfigValue("ip-logging", "enabled"))) {
+			return;
+		}
 		Player pl = event.getPlayer();
 		String ipaddr = pl.getAddress().toString().split(":")[0];
 

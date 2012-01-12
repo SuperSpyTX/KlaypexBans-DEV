@@ -30,11 +30,20 @@ public class Main extends JavaPlugin {
 
 	}
 
+	public HashMap<String, String> config = new HashMap<String, String>();
+
 	public HashMap<String, Long> banned = new HashMap<String, Long>();
 
 	public HashMap<String, String> ip = new HashMap<String, String>();
-	
+
 	public HashMap<String, String> violators = new HashMap<String, String>();
+
+	public void defaultValues() {
+		config.put("messages", "default");
+		config.put("ip-logging", "enable");
+		config.put("ban-length", "1d");
+		config.put("lightning-on-death", "enabled");
+	}
 
 	public void removeBan(String player) {
 		changeBan(player, (Long) banned.get(player), true);
@@ -79,6 +88,52 @@ public class Main extends JavaPlugin {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public String getConfigValue(String cfg, String value) {
+		try {
+			String ret = this.config.get(cfg);
+			return ret;
+		} catch (Exception e) {
+			return value;
+		}
+	}
+
+	public Long parseTime(String time) {
+		Long ti = Long.parseLong(time.replace("m", "").replace("h", "")
+				.replace("d", ""));
+		if (time.endsWith("m")) {
+			// minutes.
+			return ti * 60000; // Change to milliseconds.
+		} else if (time.endsWith("h")) {
+			// hours
+			return ti * 1000 * 60 * 60;
+		} else if (time.endsWith("d")) {
+			// days
+			return ti * 24 * 1000 * 60 * 60;
+		}
+
+		this.log.info("Unable to read time in configuration. Setting to default.");
+		return (long) (24 * 1000 * 60 * 60);
+	}
+
+	public Boolean parseBoolean(String cfg) {
+		if (cfg.equalsIgnoreCase("enabled")) {
+			return true;
+		} else if (cfg.equalsIgnoreCase("disabled")) {
+			return false;
+		}
+
+		// unable to read the statement, returning true.
+		return true;
+	}
+
+	public String parseMessages(String cfg) {
+		if (cfg.equalsIgnoreCase("default")) {
+			return cfg;
+		}
+
+		return "default";
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -155,21 +210,128 @@ public class Main extends JavaPlugin {
 			var10.printStackTrace();
 		}
 	}
-	
+
+	public void loadConfig() {
+		try {
+			BufferedReader var0 = new BufferedReader(new FileReader(
+					getDataFolder().getAbsolutePath() + File.separator
+							+ "config.txt"));
+			String var4;
+			try {
+				while ((var4 = var0.readLine()) != null) {
+					String cfg = var4.split("=")[0];
+					String val = var4.split("=")[1];
+					config.put(cfg, val);
+				}
+			} catch (Exception var9) {
+				var9.printStackTrace();
+			}
+
+			var0.close();
+
+			// now parse the new shit :P
+			this.banl = parseTime(getConfigValue("ban-length", "1d"));
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("rawtypes")
+	public void newConfig() {
+		try {
+			PrintWriter var0 = new PrintWriter(new FileWriter(getDataFolder()
+					.getAbsolutePath() + File.separator + "config.txt"));
+			defaultValues();
+			Iterator var1 = config.entrySet().iterator();
+			String writefile = "";
+			while (var1.hasNext()) {
+				Entry var2 = (Entry) var1.next();
+				String cfg = (String) var2.getKey();
+				String value = (String) var2.getValue();
+				writefile += cfg.toString() + "=" + value.toString() + "\n";
+			}
+
+			var0.write(writefile);
+			var0.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void loadConfiguration() {
+		// load the real configuration.
+		final File blocks = new File(getDataFolder().getAbsolutePath()
+				+ File.separator + "config.txt");
+		if (blocks.exists()) {
+			this.log.info("Loading configuration...");
+			loadConfig();
+			this.log.info("Configuration loaded!");
+		} else {
+			try {
+				this.log.info("No configuration! Creating.");
+				blocks.createNewFile();
+				newConfig();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		// load banned users
+		final File blocks1 = new File(getDataFolder().getAbsolutePath()
+				+ File.separator + "bannedplayers.txt");
+		if (blocks1.exists()) {
+			this.log.info("Loading previous bans...");
+			loadBannedPlayers();
+			this.log.info(banned.size() + " bans loaded!");
+		} else {
+			try {
+				this.log.info("No ban file! Creating.");
+				blocks1.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		// load ip logs.
+		final File blocks11 = new File(getDataFolder().getAbsolutePath()
+				+ File.separator + "ipdata.txt");
+		if (blocks11.exists()) {
+			this.log.info("Loading IP data...");
+			loadIPPlayers();
+			this.log.info(ip.size() + " players loaded!");
+		} else {
+			try {
+				this.log.info("No IP file! Creating.");
+				blocks11.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		// set commands CPU
+		this.getCommand("sban").setExecutor(new Commands(this));
+	}
+
 	@SuppressWarnings("rawtypes")
 	public String getRealPlayersName(String ip) {
 		Iterator v = this.ip.entrySet().iterator();
-		while(v.hasNext()) {
+		while (v.hasNext()) {
 			Entry line = (Entry) v.next();
 			String player = (String) line.getKey();
 			String rip = (String) line.getValue();
-			if(!rip.equals(ip)) {
+			if (!rip.equals(ip)) {
 				continue;
 			}
-			
+
 			return player;
 		}
-		
+
 		return "";
 	}
 
@@ -180,9 +342,10 @@ public class Main extends JavaPlugin {
 	public boolean canUseCommand(Player player) {
 		return player.hasPermission("sban.commands");
 	}
-	
+
 	public boolean ipLogCheck(Player player) {
-		return player.hasPermission("sban.iplog");
+		return parseBoolean(getConfigValue("ip-logging", "enabled")) ? false
+				: player.hasPermission("sban.iplog");
 	}
 
 	public void notifyAdmins(String msg) {
@@ -206,45 +369,7 @@ public class Main extends JavaPlugin {
 			getDataFolder().mkdir();
 		}
 
-		// load banned users
-		final File blocks = new File(getDataFolder().getAbsolutePath()
-				+ File.separator + "bannedplayers.txt");
-		if (blocks.exists()) {
-			this.log.info("Loading previous bans...");
-			loadBannedPlayers();
-			this.log.info(banned.size() + " bans loaded!");
-		} else {
-			try {
-				this.log.info("No ban file! Creating.");
-				blocks.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		// load ip logs.
-		final File blocks1 = new File(getDataFolder().getAbsolutePath()
-				+ File.separator + "ipdata.txt");
-		if (blocks1.exists()) {
-			this.log.info("Loading IP data...");
-			loadIPPlayers();
-			this.log.info(ip.size() + " players loaded!");
-		} else {
-			try {
-				this.log.info("No IP file! Creating.");
-				blocks1.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		// todo: function to convert to milliseconds
-		banl = banl * 1000 * 60 * 60; // Change to milliseconds.
-
-		// set commands CPU
-		this.getCommand("sban").setExecutor(new Commands(this));
+		loadConfiguration();
 
 		// register dem events
 		this.getServer()
@@ -255,10 +380,12 @@ public class Main extends JavaPlugin {
 				.getPluginManager()
 				.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener,
 						Priority.Normal, this);
-		this.getServer()
-				.getPluginManager()
-				.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener,
-						Priority.Normal, this);
+		if (parseBoolean(getConfigValue("ip-logging", "enabled"))) {
+			this.getServer()
+					.getPluginManager()
+					.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener,
+							Priority.Normal, this);
+		}
 		this.log.info("SkrillexBans Enabled!");
 	}
 

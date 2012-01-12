@@ -90,6 +90,8 @@ public class Commands implements CommandExecutor {
 			mai.log.info("Reloading configuration..");
 			mai.banned.clear();
 			mai.violators.clear();
+		    mai.config.clear();
+		    mai.ip.clear();
 			
 			mai.loadConfiguration();
 

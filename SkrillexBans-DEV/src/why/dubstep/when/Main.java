@@ -344,8 +344,8 @@ public class Main extends JavaPlugin {
 	}
 
 	public boolean ipLogCheck(Player player) {
-		return parseBoolean(getConfigValue("ip-logging", "enabled")) ? false
-				: player.hasPermission("sban.iplog");
+		return parseBoolean(getConfigValue("ip-logging", "enabled")) ? player.hasPermission("sban.iplog")
+				: false;
 	}
 
 	public void notifyAdmins(String msg) {

@@ -276,7 +276,7 @@ public class Main extends JavaPlugin {
 				newConfig();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 

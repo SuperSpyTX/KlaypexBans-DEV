@@ -297,7 +297,7 @@ public class Main extends JavaPlugin {
 			}
 		}
 
-		// load ip logs.
+		// load ip logs
 		final File blocks11 = new File(getDataFolder().getAbsolutePath()
 				+ File.separator + "ipdata.txt");
 		if (blocks11.exists()) {

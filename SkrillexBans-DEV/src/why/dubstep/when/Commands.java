@@ -62,27 +62,29 @@ public class Commands implements CommandExecutor {
 			}
 		} else if (arg3[0].equalsIgnoreCase("vlist")) {
 			if (mai.ipLogCheck((Player) arg0)) {
-					Player[] online = mai.getServer().getOnlinePlayers();
-					int o = 0;
-					for (int i = 0; i < online.length; i++) {
-						if (!mai.violators.containsKey(online[i].getName())) {
-							continue;
-						}
-						String ipd = mai.violators.get(online[i].getName());
-						// one of dem violators.
-						o += 1;
-						if (o == 1) {
-							arg0.sendMessage(ChatColor.RED
-									+ "Oh noes! We got multiple account violators on the loose!");
+				Player[] online = mai.getServer().getOnlinePlayers();
+				int o = 0;
+				for (int i = 0; i < online.length; i++) {
+					if (!mai.violators.containsKey(online[i].getName())) {
+						continue;
+					}
+					String ipd = mai.violators.get(online[i].getName());
+					// one of dem violators.
+					o += 1;
+					if (o == 1) {
+						arg0.sendMessage(ChatColor.RED
+								+ "Oh noes! We got multiple account violators on the loose!");
 
-						}
-						arg0.sendMessage(ChatColor.RED + "Player: "
-								+ online[i].getName() + " with IP: " + ipd);
-						arg0.sendMessage(ChatColor.RED + "Real Player's name is: " + mai.getRealPlayersName(ipd));
 					}
-					if(o == 0) {
-						arg0.sendMessage(ChatColor.GREEN + "No violators are online! You're safe.");
-					}
+					arg0.sendMessage(ChatColor.RED + "Player: "
+							+ online[i].getName() + " with IP: " + ipd);
+					arg0.sendMessage(ChatColor.RED + "Real Player's name is: "
+							+ mai.getRealPlayersName(ipd));
+				}
+				if (o == 0) {
+					arg0.sendMessage(ChatColor.GREEN
+							+ "No violators are online! You're safe.");
+				}
 			} else {
 				arg0.sendMessage("Chuck Testa.");
 			}
@@ -90,9 +92,9 @@ public class Commands implements CommandExecutor {
 			mai.log.info("Reloading configuration..");
 			mai.banned.clear();
 			mai.violators.clear();
-		    mai.config.clear();
-		    mai.ip.clear();
-			
+			mai.config.clear();
+			mai.ip.clear();
+
 			mai.loadConfiguration();
 
 			arg0.sendMessage("Reloaded configuration");
@@ -110,7 +112,7 @@ public class Commands implements CommandExecutor {
 			return processCmd(arg3, arg0, false);
 		}
 
-		//return true;
+		// return true;
 	}
 
 }

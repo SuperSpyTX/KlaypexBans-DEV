@@ -28,7 +28,7 @@ public class Main extends JavaPlugin {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	@Override
 	public void onEnable() {
 		// TODO Auto-generated method stub
@@ -41,9 +41,10 @@ public class Main extends JavaPlugin {
 		loadConfiguration();
 
 		// register dem events
-		
+
 		this.getServer().getPluginManager().registerEvents(deathListener, this);
-		this.getServer().getPluginManager().registerEvents(playerListener, this);
+		this.getServer().getPluginManager()
+				.registerEvents(playerListener, this);
 		this.log.info("SkrillexBans Enabled!");
 	}
 

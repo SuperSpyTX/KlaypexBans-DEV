@@ -18,7 +18,7 @@ public class PlayerListen implements Listener {
 	public PlayerListen(Main ma) {
 		mai = ma;
 	}
-	
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		Player pl = event.getPlayer();
@@ -56,7 +56,7 @@ public class PlayerListen implements Listener {
 	@SuppressWarnings("rawtypes")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
-		if(!mai.parseBoolean(mai.getConfigValue("ip-logging", "enabled"))) {
+		if (!mai.parseBoolean(mai.getConfigValue("ip-logging", "enabled"))) {
 			return;
 		}
 		Player pl = event.getPlayer();
@@ -71,7 +71,7 @@ public class PlayerListen implements Listener {
 						continue;
 					}
 					String ipd = mai.violators.get(online[i].getName());
-					
+
 					// one of dem violators.
 					o += 1;
 					if (o == 1) {
@@ -81,7 +81,8 @@ public class PlayerListen implements Listener {
 					}
 					mai.notifyAdmins(ChatColor.RED + "Player: "
 							+ online[i].getName() + " with IP: " + ipd);
-					mai.notifyAdmins(ChatColor.RED + "Real Player's name is: " + mai.getRealPlayersName(ipd));
+					mai.notifyAdmins(ChatColor.RED + "Real Player's name is: "
+							+ mai.getRealPlayersName(ipd));
 				}
 			}
 			return;
@@ -106,7 +107,8 @@ public class PlayerListen implements Listener {
 								+ "Oh noes! We got a multi accounter on the loose!");
 						mai.notifyAdmins(ChatColor.RED + "Player: "
 								+ pl.getName() + " with IP: " + ipaddr);
-						mai.notifyAdmins(ChatColor.RED + "Real Player's name is: " + player);
+						mai.notifyAdmins(ChatColor.RED
+								+ "Real Player's name is: " + player);
 						mai.notifyAdmins(ChatColor.RED
 								+ "To excuse: do /sban excuse " + pl.getName()
 								+ " or ban with rBans.");

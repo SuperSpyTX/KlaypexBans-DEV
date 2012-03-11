@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -29,6 +28,27 @@ public class Main extends JavaPlugin {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public void onEnable() {
+		// TODO Auto-generated method stub
+		this.log = Logger.getLogger("Minecraft");
+		this.log.info("About to enable SkrillexBans.");
+		if (!getDataFolder().exists()) {
+			getDataFolder().mkdir();
+		}
+
+		loadConfiguration();
+
+		// register dem events
+		
+		this.getServer().getPluginManager().registerEvents(deathListener, this);
+
+		if (parseBoolean(getConfigValue("ip-logging", "enabled"))) {
+			this.getServer().getPluginManager().registerEvents(playerListener, this);
+		}
+		this.log.info("SkrillexBans Enabled!");
+	}
 
 	public HashMap<String, String> config = new HashMap<String, String>();
 
@@ -40,7 +60,7 @@ public class Main extends JavaPlugin {
 
 	public void defaultValues() {
 		config.put("messages", "default");
-		config.put("ip-logging", "enable");
+		config.put("ip-logging", "disable");
 		config.put("ban-length", "1d");
 		config.put("lightning-on-death", "enabled");
 	}
@@ -77,9 +97,7 @@ public class Main extends JavaPlugin {
 				Entry var2 = (Entry) var1.next();
 				String pl = (String) var2.getKey();
 				Long ban = (Long) var2.getValue();
-				writefile += pl.toString() + "=" + Long.toString(ban) + "\n"; // manual
-																				// linebreaks
-																				// -.-
+				writefile += pl.toString() + "=" + Long.toString(ban) + "\n";
 			}
 
 			var0.write(writefile);
@@ -152,9 +170,7 @@ public class Main extends JavaPlugin {
 				Entry var2 = (Entry) var1.next();
 				String pl = (String) var2.getKey();
 				String ipo = (String) var2.getValue();
-				writefile += pl.toString() + "=" + ipo.toString() + "\n"; // manual
-																			// linebreaks
-																			// -.-
+				writefile += pl.toString() + "=" + ipo.toString() + "\n";
 			}
 
 			var0.write(writefile);
@@ -276,7 +292,7 @@ public class Main extends JavaPlugin {
 				newConfig();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				// e.printStackTrace();
 			}
 		}
 
@@ -344,8 +360,8 @@ public class Main extends JavaPlugin {
 	}
 
 	public boolean ipLogCheck(Player player) {
-		return parseBoolean(getConfigValue("ip-logging", "enabled")) ? player.hasPermission("sban.iplog")
-				: false;
+		return parseBoolean(getConfigValue("ip-logging", "enabled")) ? player
+				.hasPermission("sban.iplog") : false;
 	}
 
 	public void notifyAdmins(String msg) {
@@ -358,35 +374,6 @@ public class Main extends JavaPlugin {
 			}
 			pl.sendMessage(msg);
 		}
-	}
-
-	@Override
-	public void onEnable() {
-		// TODO Auto-generated method stub
-		this.log = Logger.getLogger("Minecraft");
-		this.log.info("About to enable SkrillexBans.");
-		if (!getDataFolder().exists()) {
-			getDataFolder().mkdir();
-		}
-
-		loadConfiguration();
-
-		// register dem events
-		this.getServer()
-				.getPluginManager()
-				.registerEvent(Event.Type.ENTITY_DEATH, this.deathListener,
-						Priority.Normal, this);
-		this.getServer()
-				.getPluginManager()
-				.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener,
-						Priority.Normal, this);
-		if (parseBoolean(getConfigValue("ip-logging", "enabled"))) {
-			this.getServer()
-					.getPluginManager()
-					.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener,
-							Priority.Normal, this);
-		}
-		this.log.info("SkrillexBans Enabled!");
 	}
 
 }

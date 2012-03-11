@@ -6,17 +6,20 @@ import java.util.Map.Entry;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-public class PlayerListen extends PlayerListener {
+public class PlayerListen implements Listener {
 
 	public Main mai;
 
 	public PlayerListen(Main ma) {
 		mai = ma;
 	}
-
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		Player pl = event.getPlayer();
 		if (mai.isExempt(pl) || mai.canUseCommand(pl)) {
@@ -51,6 +54,7 @@ public class PlayerListen extends PlayerListener {
 	}
 
 	@SuppressWarnings("rawtypes")
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if(!mai.parseBoolean(mai.getConfigValue("ip-logging", "enabled"))) {
 			return;

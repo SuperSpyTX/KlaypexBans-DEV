@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityListener;
 
 public class DeathListener implements Listener {
 
@@ -56,9 +55,7 @@ public class DeathListener implements Listener {
 					deathmessage += "fell into Klaypex's bassdrops.";
 					break;
 				case 3:
-					deathmessage += "didn't survive basscode's airwaves."; // fanboy
-																			// alert
-																			// :3
+					deathmessage += "didn't survive basscode's airwaves.";
 					break;
 				case 4:
 					deathmessage += "has fallen into the hands of dubstep.";

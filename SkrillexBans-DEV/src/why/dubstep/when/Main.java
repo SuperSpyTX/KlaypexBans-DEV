@@ -12,7 +12,6 @@ import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
@@ -20,6 +19,7 @@ public class Main extends JavaPlugin {
 	public Logger log;
 	public Long banl = 24L;
 	public File cfgdir;
+	public boolean iplogging = false;
 	public DeathListener deathListener = new DeathListener(this);
 	public PlayerListen playerListener = new PlayerListen(this);
 
@@ -43,10 +43,7 @@ public class Main extends JavaPlugin {
 		// register dem events
 		
 		this.getServer().getPluginManager().registerEvents(deathListener, this);
-
-		if (parseBoolean(getConfigValue("ip-logging", "enabled"))) {
-			this.getServer().getPluginManager().registerEvents(playerListener, this);
-		}
+		this.getServer().getPluginManager().registerEvents(playerListener, this);
 		this.log.info("SkrillexBans Enabled!");
 	}
 
@@ -60,7 +57,7 @@ public class Main extends JavaPlugin {
 
 	public void defaultValues() {
 		config.put("messages", "default");
-		config.put("ip-logging", "disable");
+		config.put("ip-logging", "disabled");
 		config.put("ban-length", "1d");
 		config.put("lightning-on-death", "enabled");
 	}

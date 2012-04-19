@@ -38,13 +38,12 @@ public class PlayerListen implements Listener {
 					// user is still banned.
 					// algebra?
 					int d = (int) (banExpiry - timenow);
-					int timeleft = (int) (d / 60 / 60 / 1000);
 					mai.log.info(Long.toString(timenow));
 					mai.log.info(Long.toString(banExpiry));
 					event.disallow(
 							PlayerLoginEvent.Result.KICK_BANNED,
 							"You are banned, Expires in "
-									+ Integer.toString(timeleft) + " hours");
+									+ mai.banLengthCalc(d));
 				}
 			}
 		} catch (Exception e) {

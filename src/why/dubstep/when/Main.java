@@ -133,6 +133,23 @@ public class Main extends JavaPlugin {
 		this.log.info("Unable to read time in configuration. Setting to default.");
 		return (long) (24 * 1000 * 60 * 60);
 	}
+	
+	public String banLengthCalc(int length) {
+		
+		if((length / 60 / 60 / 1000) > 0) {
+			return Integer.toString(length / 60 / 60 / 1000) + " hours.";
+		}
+		
+		if((length / 60 / 1000) > 0) {
+			return Integer.toString(length / 60 / 1000) + " minutes.";
+		}
+		
+		if((length / 1000) > 0) {
+			return Integer.toString(length / 1000) + " seconds!";
+		}
+		
+		return "Unknown";
+	}
 
 	public Boolean parseBoolean(String cfg) {
 		if (cfg.equalsIgnoreCase("enabled")) {

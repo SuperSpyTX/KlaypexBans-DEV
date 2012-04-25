@@ -61,7 +61,7 @@ public class Commands implements CommandExecutor {
 				return true;
 			}
 		} else if (arg3[0].equalsIgnoreCase("vlist")) {
-			if (mai.ipLogCheck((Player) arg0)) {
+			try {
 				Player[] online = mai.getServer().getOnlinePlayers();
 				int o = 0;
 				for (int i = 0; i < online.length; i++) {
@@ -85,7 +85,7 @@ public class Commands implements CommandExecutor {
 					arg0.sendMessage(ChatColor.GREEN
 							+ "No violators are online! You're safe.");
 				}
-			} else {
+			} catch (Exception e) {
 				arg0.sendMessage("Chuck Testa.");
 			}
 		} else if (arg3[0].equalsIgnoreCase("reload")) {

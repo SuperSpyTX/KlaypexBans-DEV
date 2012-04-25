@@ -20,7 +20,7 @@ public class DeathListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onEntityDeath(EntityDeathEvent event) {
 		if (event.getEntity() instanceof Player) {
-			Player pl = (Player) event.getEntity();
+			final Player pl = (Player) event.getEntity();
 			if (mai.isExempt(pl) || mai.canUseCommand(pl)) {
 				return;
 			}
@@ -118,7 +118,21 @@ public class DeathListener implements Listener {
 					"enabled"))) {
 				pl.getWorld().strikeLightning(pl.getLocation());
 			}
-			pl.kickPlayer(mai.getConfigValue("death-kickmsg", "Oh noes! u dead! See you tomorrow."));
+			Thread nt = new Thread() {
+				public void run() {
+					try {
+						Thread.sleep(Integer.parseInt(mai.getConfigValue("delay-death", "2000")));
+					} catch (NumberFormatException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					pl.kickPlayer(mai.getConfigValue("death-kickmsg", "Oh noes! u dead! See you tomorrow."));
+				}
+			}; nt.start();
+			
 
 		} else {
 			// mai.log.info("Something went wrong :O");

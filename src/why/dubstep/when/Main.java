@@ -62,6 +62,7 @@ public class Main extends JavaPlugin {
 		config.put("ban-length", "1d");
 		config.put("lightning-on-death", "enabled");
 		config.put("death-kickmsg", "Oh noes! u dead! See you tomorrow.");
+		config.put("delay-death", "2000");
 	}
 
 	public void removeBan(String player) {
@@ -135,6 +136,10 @@ public class Main extends JavaPlugin {
 	}
 	
 	public String banLengthCalc(int length) {
+		
+		if((length / 24 / 60 / 60 / 1000) > 0) {
+			return Integer.toString(length / 24 / 60 / 60 / 1000) + " days.";
+		}
 		
 		if((length / 60 / 60 / 1000) > 0) {
 			return Integer.toString(length / 60 / 60 / 1000) + " hours.";
